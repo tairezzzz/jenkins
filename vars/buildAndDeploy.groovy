@@ -4,7 +4,7 @@ def call(params) {
     def tags = params.get('tags');
     def buildArgs = params.get('buildArgs');
 
-    DOCKER_IMAGE = docker.build(dockerRegistry, buildArgs)
+    def DOCKER_IMAGE = docker.build("${dockerRegistry}:${tags[0]}", buildArgs)
 
     docker.withRegistry('', registryCredentials) {
         tags.each { tag ->
