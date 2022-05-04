@@ -1,20 +1,26 @@
-def call(params) {
-    def dockerRegistry = params.get('dockerRegistry');
-    def registryCredentials = params.get('registryCredentials');
-    def tags = params.get('tags');
-    def buildArgs = params.get('buildArgs');
+def call(Object[] args) {
 
-    def DOCKER_IMAGE = docker.build("${dockerRegistry}:${tags[0]}", buildArgs)
+    args.each { params ->
+        def dockerRegistry = params.get('dockerRegistry');
+        def registryCredentials = params.get('registryCredentials');
+        def tags = params.get('tags');
+        def buildArgs = params.get('buildArgs');
 
-    docker.withRegistry('', registryCredentials) {
-        tags.each { tag ->
-            DOCKER_IMAGE.push(tag);
+        def DOCKER_IMAGE = docker.build("${dockerRegistry}:${tags[0]}", buildArgs)
+
+        docker.withRegistry('', registryCredentials) {
+            tags.each { tag ->
+                DOCKER_IMAGE.push(tag);
+            }
         }
     }
 
-    tags.each { tag ->
-        sh "docker rmi ${dockerRegistry}:${tag}"
-    }
+    args.each { params ->
+        def dockerRegistry = params.get('dockerRegistry');
+        def tags = params.get('tags');
 
-    return DOCKER_IMAGE;
+        tags.each { tag ->
+            sh "docker rmi ${dockerRegistry}:${tag}"
+        }
+    }
 }
