@@ -10,7 +10,7 @@ def call(Object args) {
 
   pathCommand = ''
   if (args.path) {
-    pathCommand = "cd $args.path && \n"
+    pathCommand = "cd $args.path"
   }
 
   environments = '';
@@ -18,9 +18,13 @@ def call(Object args) {
     environments += "$env ";
   }
 
-  command = """
-	  $pathCommand$environments${args.command.trim()}
+  shFile = """
+    #!/bin/bash
+    set -e
+
+    $pathCommand
+    ${args.command}
   """
 
-  sshCommand remote: args.remote, command: "\n${command.trim()}"
+  sshCommand remote: args.remote, command: "$environments sh <<< '$shFile'"
 }
