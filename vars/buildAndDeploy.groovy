@@ -17,7 +17,7 @@ def call(Object[] args) {
                 }
             }
         } else {
-            sh "echo ${pass} | docker login -u ${user} --password-stdin ${dockerRegistry}"
+            sh "docker login -u ${user} -p ${pass} ${dockerRegistry}"
             tags.each { tag ->
                 DOCKER_IMAGE.push(tag)
             }

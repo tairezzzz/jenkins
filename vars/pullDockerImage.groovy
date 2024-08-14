@@ -17,8 +17,7 @@ def call(params) {
             sshCommand remote: remote, command: "docker logout"
         }
     } else {
-        sshCommand remote: remote, command: "docker login -u $user -p $pass"
-        sshCommand remote: remote, command: "echo ${pass} | docker login -u ${user} --password-stdin ${dockerRegistry}"
+        sshCommand remote: remote, command: "docker login -u $user -p $pass $dockerRegistry"
         sshCommand remote: remote, command: "docker pull $image"
         sshCommand remote: remote, command: "docker logout"
     }
