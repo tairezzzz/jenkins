@@ -7,6 +7,7 @@ def call(env, params) {
 
       REMOTE.name = value.get('host');
       REMOTE.host = value.get('host');
+      REMOTE.port = value.get('port') ?: 22;
       REMOTE.allowAnyHosts = true;
 
       try {
@@ -19,6 +20,7 @@ def call(env, params) {
           REMOTE.password = PASSWORD;
         }
       } catch (e) {
+        echo "Error getting username/password credentials: ${e}";
       }
 
       try {
@@ -34,6 +36,7 @@ def call(env, params) {
           )
         }
       } catch (e) {
+        echo "Error getting SSH private key: ${e}";
       }
     }
   }
